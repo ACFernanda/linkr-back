@@ -3,6 +3,7 @@ CREATE TABLE "users" (
 	"email" TEXT NOT NULL UNIQUE,
 	"password" TEXT NOT NULL,
   "username" TEXT NOT NULL UNIQUE,
+  "pictureURL" TEXT NOT NULL,
 	"createdAt" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
 );
 
