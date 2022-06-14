@@ -1,9 +1,10 @@
 import { Router } from "express";
 
-import { getAllPosts } from "../controllers/postsController.js";
+import { getAllPosts, publishNewPost } from "../controllers/postsController.js";
 
 const postsRouter = Router();
 
 postsRouter.get("/posts", getAllPosts);
+postsRouter.post("/posts", publishNewPost);
 
 export default postsRouter;
