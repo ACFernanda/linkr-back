@@ -20,6 +20,9 @@ CREATE TABLE "posts" (
 	"userId" INTEGER NOT NULL REFERENCES "users"("id"),
 	"url" TEXT NOT NULL,
 	"description" TEXT,
+	"urlTitle" TEXT,
+	"urlDescription" TEXT,
+	"urlImage" TEXT,
 	"createdAt" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
 );
 
