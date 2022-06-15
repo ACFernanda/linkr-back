@@ -25,7 +25,14 @@ export async function publishNewPost(req, res) {
       console.log(metadata);
       urlTitle = metadata.title;
       urlDescription = metadata.description;
-      urlImage = metadata.source + metadata.image;
+      if (metadata.image.startsWith("http")) {
+        urlImage = metadata.image;
+      } else if (metadata.image.startsWith("/")) {
+        urlImage = metadata.source + metadata.image;
+      } else {
+        urlImage = metadata.source + "/" + metadata.image;
+      }
+
       post = { ...post, urlTitle, urlDescription, urlImage };
 
       try {
