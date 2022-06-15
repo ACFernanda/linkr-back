@@ -5,7 +5,6 @@ import { postsRepository } from "../repositories/postsRepository.js";
 export async function getAllPosts(req, res) {
   try {
     const result = await postsRepository.getAllPosts();
-
     res.status(200).send(result.rows);
   } catch (e) {
     console.log(e);
@@ -15,7 +14,7 @@ export async function getAllPosts(req, res) {
 
 export async function publishNewPost(req, res) {
   const { url, description } = req.body;
-  const { userId } = res.locals; // usuario vai vir pela autenticação
+  const { userId } = res.locals;
   let urlTitle = "";
   let urlDescription = "";
   let urlImage = "";
