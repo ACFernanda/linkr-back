@@ -25,7 +25,7 @@ export async function publishNewPost(req, res) {
       console.log(metadata);
       urlTitle = metadata.title;
       urlDescription = metadata.description;
-      urlImage = metadata.image;
+      urlImage = metadata.source + metadata.image;
       post = { ...post, urlTitle, urlDescription, urlImage };
 
       try {
