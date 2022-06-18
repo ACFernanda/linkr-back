@@ -20,3 +20,8 @@ export async function getUsers(req, res) {
         res.status(500).send("Ocorreu um erro ao buscar os usuários!");
     }
 }
+
+export async function getUserPosts(req, res) {
+    const {requestedUser} = res.locals;
+    res.send(`Buscando o usuário ${requestedUser.username}`);
+}

@@ -21,7 +21,20 @@ async function selectUsersByName(username) {
     return db.query(query, values);
 }
 
+async function selectUserById(userId) {
+    const query = `
+        SELECT * 
+        FROM users
+        WHERE id = $1 
+    `;
+
+    const values = [userId];
+
+    return db.query(query, values);
+}
+
 export const usersRepository = {
     selectAllUsers,
-    selectUsersByName
+    selectUsersByName,
+    selectUserById
 };
