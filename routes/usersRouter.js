@@ -1,8 +1,11 @@
 import { Router } from "express";
-import { getUsers } from "../controllers/usersController.js";
+import { getUserPosts, getUsers } from "../controllers/usersController.js";
 import { tokenValidator } from "../middlewares/tokenValidator.js";
+import { userValidator } from "../middlewares/userValidator.js";
 
 const usersRouter = Router();
 
 usersRouter.get("/users", tokenValidator, getUsers);
+usersRouter.get("/users/:id", tokenValidator, userValidator, getUserPosts);
+
 export default usersRouter;

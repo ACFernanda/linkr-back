@@ -1,3 +1,4 @@
+import { postsRepository } from "../repositories/postsRepository.js";
 import { usersRepository } from "../repositories/usersRepository.js";
 
 export async function getUsers(req, res) {
@@ -17,6 +18,22 @@ export async function getUsers(req, res) {
 
     } catch (e) {
         console.log(e);
-        res.status(500).send("Ocorreu um erro ao buscar os usuários!");
+        return res.status(500).send("Ocorreu um erro ao buscar os usuários!");
+    }
+}
+
+export async function getUserPosts(req, res) {
+    const { requestedUser } = res.locals;
+
+    try {
+        const result = await postsRepository.getUserPosts(requestedUser.id);
+        const posts = result.rows;
+        return res.send({
+            posts,
+            name: requestedUser.username
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(500).send("Ocorreu um erro ao buscar os posts do usuário!");
     }
 }
