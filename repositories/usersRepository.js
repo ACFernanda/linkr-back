@@ -1,12 +1,12 @@
 import db from "../config/db.js";
 
-async function selectAllUsers(){
+async function selectAllUsers() {
     const query = `
         SELECT id, username AS name, "pictureURL" FROM users;
     `;
 
     return db.query(query);
-}
+};
 
 async function selectUsersByName(username) {
     const formatedName = `${username}%`;
@@ -19,7 +19,7 @@ async function selectUsersByName(username) {
     const values = [formatedName];
 
     return db.query(query, values);
-}
+};
 
 async function selectUserById(userId) {
     const query = `
@@ -31,7 +31,7 @@ async function selectUserById(userId) {
     const values = [userId];
 
     return db.query(query, values);
-}
+};
 
 export const usersRepository = {
     selectAllUsers,
