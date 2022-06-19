@@ -33,8 +33,20 @@ async function selectUserById(userId) {
     return db.query(query, values);
 };
 
+async function selectUserByEmail(email) {
+    const query = `
+        SELECT * 
+        FROM users
+        WHERE email = $1
+    `;
+
+    const values = [email];
+    return db.query(query, values);
+}
+
 export const usersRepository = {
     selectAllUsers,
     selectUsersByName,
-    selectUserById
+    selectUserById,
+    selectUserByEmail
 };
