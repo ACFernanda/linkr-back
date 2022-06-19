@@ -3,13 +3,15 @@ import db from "./../config/db.js";
 async function getAllPosts() {
   return db.query(
     `
-    SELECT users.id AS "userId", users.username, users."pictureURL", posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage"
+    SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL", posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage", COUNT(likes.id) AS "countLikes"
     FROM posts 
     JOIN users ON posts."userId" = users.id
+    LEFT JOIN likes ON posts.id = likes."postId"
+    GROUP BY posts.id, users.id
     ORDER BY posts."createdAt" DESC
     LIMIT 20;`
   );
-};
+}
 
 async function getUserPosts(userId) {
   return db.query(
