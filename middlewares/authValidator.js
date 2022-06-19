@@ -28,8 +28,8 @@ export async function validateSignIn(req, res, next) {
 export async function findUser(req, res, next) {
     try {
         const email = stripHtml(req.body.email).result.trim();
-        const user = await usersRepository.selectUsersByName(email); // ????
-        if (!user) {
+        const user = await usersRepository.selectUserByEmail(email); // ????
+        if (!user.rows.length > 0) {
             return res.status(404).send({
                 message: 'User not found',
                 detail: `Ensure to provide a valid email corresponding to a registered user`,
@@ -43,7 +43,7 @@ export async function findUser(req, res, next) {
     }
 }
 
-export async function validatePassword(req, res, next) {
+/* export async function validatePassword(req, res, next) {
     try {
         const password = req.body.password;
         const { email } = res.locals;
@@ -58,7 +58,7 @@ export async function validatePassword(req, res, next) {
     } catch (e) {
         next(e);
     }
-}
+} */
 
 export async function validateSignUp(req, res, next) {
     try {
@@ -87,8 +87,8 @@ export async function validateSignUp(req, res, next) {
 export async function userIsUnique(_req, res, next) {
     try {
         const { email } = res.locals;
-        const user = await usersRepository.selectUsersByName(email);
-        if (user) {
+        const user = await usersRepository.selectUserByEmail(email);
+        if (user.rows.length > 0) {
             return res.status(409).send({
                 message: 'Email already registered',
                 detail: 'Ensure to provide an username that is not already registered'
