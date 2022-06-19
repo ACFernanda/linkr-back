@@ -3,13 +3,13 @@ import db from "./../config/db.js";
 async function getAllPosts() {
   return db.query(
     `
-    SELECT users.id AS "userId", users.username, users."pictureURL", posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage"
+    SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL", posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage"
     FROM posts 
     JOIN users ON posts."userId" = users.id
     ORDER BY posts."createdAt" DESC
     LIMIT 20;`
   );
-};
+}
 
 async function getUserPosts(userId) {
   return db.query(
