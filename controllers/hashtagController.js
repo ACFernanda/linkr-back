@@ -1,4 +1,20 @@
 import db from '../config/db.js'
+export async function readHashtags(post){
+    const { userId, url, description }=post
+    try{
+        const result = await db.query(`
+            SELECT id FROM posts
+            WHERE "userId"=$1 AND url=$2 AND description=$3
+        ;`,[userId,url,description])
+        const wordList=description.split(' ')
+        for(let k=0;k<wordList.length;k++){
+            if(wordList[k][0]==='#'){
+                createHashtag(result.rows[0].id,wordList[k].replace('#', ''))
+            }
+        }
+    }catch(e){console.log(e,'Erro ao ler hashtags do post criado')}
+    
+}
 export async function createHashtag(postId,word){
     try{
         let result=await db.query(`
@@ -22,7 +38,7 @@ export async function createHashtag(postId,word){
             VALUES ($1,$2)
         ;`,[postId,result.rows[0].id])
     }catch(e){
-        console.log(e)
+        console.log(e,'Erro ao criar hashtags')
     }
 }
 export async function getHashtagList(req,res){
@@ -38,8 +54,8 @@ export async function getHashtagList(req,res){
         if(result.rowCount===0){return res.sendStatus(500)}
         res.send(result.rows)
     }catch(e){
+        console.log(e,'Erro ao buscar lista de tranding hashtags')
         res.sendStatus(500)
-        console.log(e)
     }
 }
 export async function getPostsByHashtag(req,res){
@@ -53,7 +69,8 @@ export async function getPostsByHashtag(req,res){
             WHERE h.name=$1
         ;`,[word])
         res.send(result.rows)
-    }catch{
+    }catch(e){
+        console.log(e,'Erro ao buscar posts relacionados a hashtag')
         res.sendStatus(500)
     }
 }
