@@ -1,6 +1,7 @@
 import urlMetadata from "url-metadata";
 
 import { postsRepository } from "../repositories/postsRepository.js";
+import { readHashtags } from "./hashtagController.js";
 import { likesRepository } from "../repositories/likesRepository.js";
 
 export async function getAllPosts(req, res) {
@@ -47,6 +48,7 @@ export async function publishNewPost(req, res) {
 
       try {
         await postsRepository.insertNewPost(post);
+        readHashtags(post)
         res.sendStatus(201);
       } catch (e) {
         console.log(e);
