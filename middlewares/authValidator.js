@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import urlExist from 'url-exist';
 import { stripHtml } from 'string-strip-html';
 import { signInSchema, signUpSchema } from '../schemas/authSchema.js';
@@ -28,7 +27,7 @@ export async function validateSignIn(req, res, next) {
 export async function findUser(req, res, next) {
     try {
         const email = stripHtml(req.body.email).result.trim();
-        const user = await usersRepository.selectUserByEmail(email); // ????
+        const user = await usersRepository.selectUserByEmail(email);
         if (!user.rows.length > 0) {
             return res.status(404).send({
                 message: 'User not found',
@@ -42,23 +41,6 @@ export async function findUser(req, res, next) {
         next(e);
     }
 }
-
-/* export async function validatePassword(req, res, next) {
-    try {
-        const password = req.body.password;
-        const { email } = res.locals;
-        if (!bcrypt.compareSync(password, email.password)) {
-            return res.status(401).send({
-                message: 'Invalid password',
-                detail: 'Ensure to provide a valid password',
-            });
-        }
-        console.log(`Valid password`);
-        next();
-    } catch (e) {
-        next(e);
-    }
-} */
 
 export async function validateSignUp(req, res, next) {
     try {
@@ -91,7 +73,7 @@ export async function userIsUnique(_req, res, next) {
         if (user.rows.length > 0) {
             return res.status(409).send({
                 message: 'Email already registered',
-                detail: 'Ensure to provide an username that is not already registered'
+                detail: 'Ensure to provide an email that is not already registered'
             });
         }
         console.log(`User is unique`);
