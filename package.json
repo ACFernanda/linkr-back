@@ -6,7 +6,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +21,9 @@
     "joi": "^17.6.0",
     "nodemon": "^2.0.16",
     "pg": "^8.7.3",
+    "sqlstring": "^2.3.3",
+    "string-strip-html": "^9.1.12",
+    "url-exist": "^3.0.0",
     "url-metadata": "^2.5.0",
     "uuid": "^8.3.2"
   }
