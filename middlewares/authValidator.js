@@ -3,7 +3,6 @@ import { stripHtml } from 'string-strip-html';
 import { signInSchema, signUpSchema } from '../schemas/authSchema.js';
 import { usersRepository } from '../repositories/usersRepository.js';
 
-
 export async function validateSignIn(req, res, next) {
     try {
         const password = req.body.password;
@@ -59,10 +58,10 @@ export async function validateSignUp(req, res, next) {
         res.locals.email = email;
         res.locals.password = password;
         res.locals.imageURL = imageURL;
-        console.log(`Valid sign up input`);
         next();
     } catch (e) {
-        next(e);
+        console.log(e);
+        res.status(500).send("Ocorreu um erro ao cadastrar o usuário!");
     }
 }
 
@@ -76,9 +75,9 @@ export async function userIsUnique(_req, res, next) {
                 detail: 'Ensure to provide an email that is not already registered'
             });
         }
-        console.log(`User is unique`);
         next();
     } catch (e) {
-        next(e);
+        console.log(e);
+        res.status(500).send("Ocorreu um erro ao cadastrar o usuário!");
     }
 }
