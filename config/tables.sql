@@ -42,3 +42,10 @@ CREATE TABLE "post_hashtag" (
 	"postId" INTEGER NOT NULL REFERENCES "posts"("id"),
 	"hashtagId" INTEGER NOT NULL REFERENCES "hashtags"("id")
 );
+
+CREATE TABLE "messages" (
+	"id" SERIAL PRIMARY KEY NOT NULL,
+	"userId" INTEGER NOT NULL REFERENCES "users"("id"),
+	"postId" INTEGER NOT NULL REFERENCES "posts"("id"),
+	"text" TEXT NOT NULL
+);

@@ -6,16 +6,18 @@ import postsRouter from "./postsRouter.js";
 import usersRouter from "./usersRouter.js";
 import likesRouter from "./likesRouter.js";
 import authRouter from "./authRouter.js";
+import messageRouter from "./messageRouter.js";
 
 
 const router = Router();
 
 // rota.use(função);
-router.use(hashtagRouter)
+router.use(hashtagRouter);
 router.use(postsRouter);
 router.use(usersRouter);
 router.use(likesRouter);
 router.use(authRouter);
+router.use(messageRouter);
 
 
 export default router;
