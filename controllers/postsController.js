@@ -69,16 +69,36 @@ export async function editPost(req,res){
   const post={id,description}
   const idInteger=parseInt(id)
   try{
-    await db.query(`
+    const result=await db.query(`
       UPDATE posts
       SET description=$2
       WHERE id = $1;
     ;`,[idInteger,description])
+    if(result.rowCount!=1){return res.sendStatus(404)}
     deleteHashtags(idInteger)
     readHashtags(post)
+    res.sendStatus(200)
   }
   catch(e){
-    //console.log(e)
+    console.log(e)
+    res.sendStatus(500)
+  }
+}
+
+export async function deletePost(req,res){
+  const {id}=req.params
+  const idInteger=parseInt(id)
+  try{
+    deleteHashtags(idInteger)
+    const result=await db.query(`
+      DELETE FROM posts
+      WHERE id = $1;
+    ;`,[idInteger])
+    if(result.rowCount!=1){return res.sendStatus(404)}
+    res.sendStatus(200)
+  }
+  catch(e){
+    console.log(e)
     res.sendStatus(499)
   }
 }
