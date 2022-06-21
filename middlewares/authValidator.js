@@ -10,16 +10,16 @@ export async function validateSignIn(req, res, next) {
         const validate = signInSchema.validate({ email, password }, { abortEarly: false });
         if (validate.error) {
             return res.status(422).send({
-                message: 'Email is already in use',
+                message: 'Invalid input',
                 detail: validate.error.details.map((e) => e.message).join(', ')
             });
         }
         res.locals.email = email;
         res.locals.password = password;
-        console.log(`Valid sign in input`);
         next();
     } catch (e) {
-        next(e);
+        console.log(e);
+        return res.status(500).send("Ocorreu um erro ao fazer o login!");
     }
 }
 
@@ -29,15 +29,15 @@ export async function findUser(req, res, next) {
         const user = await usersRepository.selectUserByEmail(email);
         if (!user.rows.length > 0) {
             return res.status(404).send({
-                message: 'User not found',
+                message: 'User or password is invalid',
                 detail: `Ensure to provide a valid email corresponding to a registered user`,
             });
         }
         res.locals.email = email;
-        console.log(`User found`);
         next();
     } catch (e) {
-        next(e);
+        console.log(e);
+        return res.status(500).send("Ocorreu um erro ao fazer o login!");
     }
 }
 
@@ -61,7 +61,7 @@ export async function validateSignUp(req, res, next) {
         next();
     } catch (e) {
         console.log(e);
-        res.status(500).send("Ocorreu um erro ao cadastrar o usuário!");
+        return res.status(500).send("Ocorreu um erro ao cadastrar o usuário!");
     }
 }
 
@@ -78,6 +78,6 @@ export async function userIsUnique(_req, res, next) {
         next();
     } catch (e) {
         console.log(e);
-        res.status(500).send("Ocorreu um erro ao cadastrar o usuário!");
+        return res.status(500).send("Ocorreu um erro ao cadastrar o usuário!");
     }
 }
