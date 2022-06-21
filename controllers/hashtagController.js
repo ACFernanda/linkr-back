@@ -1,4 +1,6 @@
 import db from "../config/db.js";
+import {hashtagsRepository} from '../repositories/hashtagsRepository.js'
+
 export async function readHashtags(post) {
   const { userId, url, description } = post;
   try {
@@ -22,30 +24,14 @@ export async function readHashtags(post) {
 export async function createHashtag(postId, word) {
   try {
     let result = await db.query(
-      `
-            SELECT id 
-            FROM hashtags
-            WHERE name=$1
-        ;`,
-      [word]
-    );
+      `SELECT id FROM hashtags WHERE name=$1 ;`,[word]);
     if (result.rowCount === 0) {
       await db.query(
-        `
-                INSERT INTO hashtags (name) 
-                VALUES ($1)
-            ;`,
-        [word]
-      );
+        `INSERT INTO hashtags (name) VALUES ($1) ;`,[word]);
       result = await db.query(
-        `
-                SELECT id 
-                FROM hashtags
-                WHERE name=$1
-            ;`,
-        [word]
-      );
+        `SELECT id FROM hashtags WHERE name=$1; `,[word]);
     }
+    
     await db.query(
       `
             INSERT INTO post_hashtag ("postId","hashtagId") 
@@ -59,14 +45,7 @@ export async function createHashtag(postId, word) {
 }
 export async function getHashtagList(req, res) {
   try {
-    const result = await db.query(`
-            SELECT h.name as name
-            FROM post_hashtag p
-            JOIN hashtags h ON h.id=p."hashtagId"
-            GROUP BY name
-            ORDER BY COUNT(name) DESC
-            LIMIT 10
-        ;`);
+    const result = await hashtagsRepository.selectHashtagList()
     if (result.rowCount === 0) {
       return res.sendStatus(500);
     }
@@ -79,16 +58,7 @@ export async function getHashtagList(req, res) {
 export async function getPostsByHashtag(req, res) {
   const { word } = req.params;
   try {
-    const result = await db.query(
-      `
-      SELECT p.*, u."pictureURL", u.username
-      FROM hashtags h
-      JOIN post_hashtag ph ON ph."hashtagId"=h.id
-      JOIN posts p ON p.id=ph."postId"
-      JOIN users u ON u.id=p."userId"
-      WHERE h.name=$1;`,
-      [word]
-    );
+    const result = await hashtagsRepository.selectPostsByHashtag(word)
     res.send(result.rows);
   } catch (e) {
     console.log(e, "Erro ao buscar posts relacionados a hashtag");
