@@ -1,22 +1,37 @@
 import db from "../config/db.js";
 export async function readHashtags(post) {
   const { userId, url, description } = post;
+  let id=post.id
   try {
-    const result = await db.query(
-      `
-            SELECT id FROM posts
-            WHERE "userId"=$1 AND url=$2 AND description=$3
-        ;`,
-      [userId, url, description]
-    );
+    
+    if(!id){
+      const result = await db.query(
+        `
+              SELECT id FROM posts
+              WHERE "userId"=$1 AND url=$2 AND description=$3
+          ;`,
+        [userId, url, description]
+      );
+      id=result.rows[0].id
+    }
     const wordList = description.split(" ");
     for (let k = 0; k < wordList.length; k++) {
       if (wordList[k][0] === "#") {
-        createHashtag(result.rows[0].id, wordList[k].replace("#", ""));
+        createHashtag(id, wordList[k].replace("#", ""));
       }
     }
   } catch (e) {
     console.log(e, "Erro ao ler hashtags do post criado");
+  }
+}
+export async function deleteHashtags(postId){
+  try{
+    await db.query(`
+      DELETE FROM post_hashtag
+      WHERE "postId"=$1
+    ;`,[postId])
+  }catch{
+
   }
 }
 export async function createHashtag(postId, word) {

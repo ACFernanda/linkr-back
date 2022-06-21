@@ -1,8 +1,9 @@
 import urlMetadata from "url-metadata";
 
 import { postsRepository } from "../repositories/postsRepository.js";
-import { readHashtags } from "./hashtagController.js";
+import {deleteHashtags, readHashtags } from "./hashtagController.js";
 import { likesRepository } from "../repositories/likesRepository.js";
+import db from "../config/db.js";
 
 export async function getAllPosts(req, res) {
   try {
@@ -59,4 +60,25 @@ export async function publishNewPost(req, res) {
       console.log(error);
     }
   );
+}
+
+export async function editPost(req,res){
+ 
+  const {description}=req.body
+  const {id}=req.params
+  const post={id,description}
+  const idInteger=parseInt(id)
+  try{
+    await db.query(`
+      UPDATE posts
+      SET description=$2
+      WHERE id = $1;
+    ;`,[idInteger,description])
+    deleteHashtags(idInteger)
+    readHashtags(post)
+  }
+  catch(e){
+    //console.log(e)
+    res.sendStatus(499)
+  }
 }

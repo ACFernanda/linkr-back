@@ -10,7 +10,7 @@ export async function tokenValidator(req, res, next) {
 
   try {
     const session = await db.query(`SELECT * FROM sessions WHERE token=$1`, [
-      userToken,
+      userToken
     ]);
     if (!session.rows.length) {
       return res.sendStatus(401);
