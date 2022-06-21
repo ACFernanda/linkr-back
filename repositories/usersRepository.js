@@ -44,9 +44,21 @@ async function selectUserByEmail(email) {
     return db.query(query, values);
 }
 
+async function insertNewUser(user) {
+    const {username, email, passwordHash, imageURL} = user;
+    const query = `
+        INSERT INTO users (email, password, username, "pictureURL") 
+        VALUES ($1, $2, $3, $4);
+    `;
+
+    const values = [email, passwordHash, username, imageURL];
+    return db.query(query, values);
+}
+
 export const usersRepository = {
     selectAllUsers,
     selectUsersByName,
     selectUserById,
-    selectUserByEmail
+    selectUserByEmail,
+    insertNewUser
 };
