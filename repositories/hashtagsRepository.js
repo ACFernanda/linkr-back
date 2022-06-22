@@ -11,6 +11,7 @@ async function selectHashtagList(){
         ;`
         return db.query(query)
 }
+
 async function selectPostsByHashtag(word){
     const query=`
         SELECT p.*, u."pictureURL", u.username
@@ -23,7 +24,35 @@ async function selectPostsByHashtag(word){
     return db.query(query,values)
 }
 
+async function getHashtagId(word){
+    const query=`
+    SELECT id FROM hashtags WHERE name=$1 
+    ;`
+    const values=[word]
+    return db.query(query,values)
+}
+
+async function insertHashtag(word){
+    const query=`
+    INSERT INTO hashtags (name) VALUES ($1) 
+    ;`
+    const values=[word]
+    return db.query(query,values)
+}
+
+async function insertPost_Hashtag(postId,hashtagId){
+    const query=`
+        INSERT INTO post_hashtag ("postId","hashtagId") 
+        VALUES ($1,$2)
+    ;`
+    const values=[postId,hashtagId]
+    return db.query(query,values)
+}
+
 export const hashtagsRepository = {
     selectHashtagList,
-    selectPostsByHashtag
+    selectPostsByHashtag,
+    getHashtagId,
+    insertHashtag,
+    insertPost_Hashtag
   };

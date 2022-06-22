@@ -1,4 +1,4 @@
-import db from "./../config/db.js";
+import { sessionsRepository } from "../repositories/sessionsRepository.js";
 
 export async function tokenValidator(req, res, next) {
   const { authorization } = req.headers;
@@ -9,9 +9,7 @@ export async function tokenValidator(req, res, next) {
   }
 
   try {
-    const session = await db.query(`SELECT * FROM sessions WHERE token=$1`, [
-      userToken,
-    ]);
+    const session = await sessionsRepository.selectSessionByToken(userToken);
     if (!session.rows.length) {
       return res.sendStatus(401);
     }
