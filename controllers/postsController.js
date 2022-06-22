@@ -5,8 +5,9 @@ import { readHashtags } from "./hashtagController.js";
 import { likesRepository } from "../repositories/likesRepository.js";
 
 export async function getAllPosts(req, res) {
+  const { userId } = res.locals;
   try {
-    const resultPosts = await postsRepository.getAllPosts();
+    const resultPosts = await postsRepository.getAllPosts(userId);
     const posts = resultPosts.rows;
 
     const completePosts = [];
@@ -48,7 +49,7 @@ export async function publishNewPost(req, res) {
 
       try {
         await postsRepository.insertNewPost(post);
-        readHashtags(post)
+        readHashtags(post);
         res.sendStatus(201);
       } catch (e) {
         console.log(e);
