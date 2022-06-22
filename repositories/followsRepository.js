@@ -23,8 +23,17 @@ async function getIfUserFollows(userId, profileUserId) {
   );
 }
 
+async function getAllFollowing(userId) {
+  return db.query(
+    `
+    SELECT * FROM follows WHERE "userId" = $1`,
+    [userId]
+  );
+}
+
 export const followsRepository = {
   followUser,
   unfollowUser,
   getIfUserFollows,
+  getAllFollowing,
 };
