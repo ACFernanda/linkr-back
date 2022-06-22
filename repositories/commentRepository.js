@@ -9,15 +9,16 @@ async function insertComment(userId,postId,text) {
     return db.query(query, values);
 }
 
-async function selectComments(postId) {
+async function selectComments(postId,myUserId) {
     const query = `
-        SELECT c.id, u.username, u."pictureURL", c."userId", c.text
+        SELECT c.id, u.username,u."pictureURL", c."userId", c.text, f.id AS following
         FROM comments c
         JOIN users u ON u.id=c."userId"
+        LEFT JOIN follows f ON f."userId"=$2 AND f.following=c."userId"
         
         WHERE c."postId"=$1
     ;`
-    const values = [postId];
+    const values = [postId,myUserId];
     return db.query(query, values);
 }
 

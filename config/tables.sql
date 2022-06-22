@@ -48,6 +48,8 @@ CREATE TABLE "comments" (
 	"userId" INTEGER NOT NULL REFERENCES "users"("id"),
 	"postId" INTEGER NOT NULL REFERENCES "posts"("id"),
 	"text" TEXT NOT NULL
+);
+
 CREATE TABLE "follows" (
 	"id" SERIAL PRIMARY KEY NOT NULL,
 	"userId" INTEGER NOT NULL REFERENCES "users"("id"),

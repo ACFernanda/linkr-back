@@ -16,8 +16,9 @@ export async function postComment(req, res) {
 }
 export async function getComments(req, res) {
     const { postId } = req.params;
+    const {id}=req.query
   try {
-    const result = await commentRepository.selectComments(parseInt(postId))
+    const result = await commentRepository.selectComments(parseInt(postId),id)
     res.send(result.rows);
   } catch (e) {
     console.log(e, "Erro ao buscar comentarios!");
