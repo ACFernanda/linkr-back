@@ -2,8 +2,7 @@ import db from "./../config/db.js";
 
 async function getAllPosts() {
   return db.query(
-    `
-    SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL", posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage", COUNT(likes.id) AS "countLikes",COUNT(comments.id) AS "countComments"
+    `SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL", posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage", COUNT(likes.id) AS "countLikes",COUNT(comments.id) AS "countComments"
     FROM posts 
     JOIN users ON posts."userId" = users.id
     LEFT JOIN likes ON posts.id = likes."postId"
@@ -16,11 +15,14 @@ async function getAllPosts() {
 
 async function getUserPosts(userId) {
   return db.query(
-    `
-    SELECT users.id AS "userId", users.username, users."pictureURL", posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage"
+    `SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL",
+    posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage",
+    COUNT(likes.id) AS "countLikes"
     FROM posts 
     JOIN users ON posts."userId" = users.id
+    LEFT JOIN likes ON likes."postId" = posts.id
     WHERE posts."userId" = $1
+    GROUP BY posts.id, users.id
     ORDER BY posts."createdAt" DESC;`,
     [userId]
   );
@@ -29,8 +31,7 @@ async function getUserPosts(userId) {
 async function insertNewPost(post) {
   const { userId, url, description, urlTitle, urlDescription, urlImage } = post;
   return db.query(
-    `
-    INSERT INTO posts ("userId", url, description, "urlTitle", "urlDescription", "urlImage")
+    `INSERT INTO posts ("userId", url, description, "urlTitle", "urlDescription", "urlImage")
     VALUES ($1, $2, $3, $4, $5, $6);`,
     [userId, url, description, urlTitle, urlDescription, urlImage]
   );
@@ -38,8 +39,7 @@ async function insertNewPost(post) {
 
 async function getIdPost(userId, url, description ) {
   return db.query(
-    `
-    SELECT id FROM posts
+    `SELECT id FROM posts
     WHERE "userId"=$1 AND url=$2 AND description=$3
 ;`,
 [userId, url, description]
