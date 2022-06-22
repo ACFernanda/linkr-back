@@ -67,9 +67,6 @@ export async function getHashtagList(req, res) {
             ORDER BY COUNT(name) DESC
             LIMIT 10
         ;`);
-    if (result.rowCount === 0) {
-      return res.sendStatus(500);
-    }
     res.send(result.rows);
   } catch (e) {
     console.log(e, "Erro ao buscar lista de tranding hashtags");
