@@ -6,15 +6,17 @@ import { postsRepository } from "../repositories/postsRepository.js";
 import { likesRepository } from "../repositories/likesRepository.js";
 
 export async function getAllPosts(req, res) {
+  const { userId } = res.locals;
   try {
-    const resultPosts = await postsRepository.getAllPosts();
+    const resultPosts = await postsRepository.getAllPosts(userId);
     const posts = resultPosts.rows;
 
     const completePosts = [];
     for (let post of posts) {
       const resultLikes = await likesRepository.getLikes(post.postId);
-      const likes = resultLikes.rows;
-      completePosts.push({ ...post, likes: likes });
+      const likes = resultLikes.rows.map(like => like.username);
+      const likedByUser = resultLikes.rows.map(like => like.userId).includes(parseInt(userId));
+      completePosts.push({ ...post, likes, likedByUser });
     }
 
     res.status(200).send(completePosts);
@@ -49,7 +51,7 @@ export async function publishNewPost(req, res) {
 
       try {
         await postsRepository.insertNewPost(post);
-        readHashtags(post)
+        readHashtags(post);
         res.sendStatus(201);
       } catch (e) {
         console.log(e);
