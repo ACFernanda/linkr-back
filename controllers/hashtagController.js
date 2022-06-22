@@ -32,9 +32,6 @@ export async function createHashtag(postId, word) {
 export async function getHashtagList(req, res) {
   try {
     const result = await hashtagsRepository.selectHashtagList()
-    if (result.rowCount === 0) {
-      return res.sendStatus(500);
-    }
     res.send(result.rows);
   } catch (e) {
     console.log(e, "Erro ao buscar lista de tranding hashtags");
