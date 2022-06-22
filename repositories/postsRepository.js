@@ -35,8 +35,29 @@ async function insertNewPost(post) {
   );
 }
 
+async function deletePostById(id) {
+  return db.query(`
+  DELETE FROM posts
+  WHERE id = $1;
+;`,
+    [id]
+  );
+}
+
+async function updatePost(id,description) {
+  return db.query(`
+    UPDATE posts
+    SET description=$2
+    WHERE id = $1;
+  ;`,
+    [id,description]
+  );
+}
+
 export const postsRepository = {
   getAllPosts,
   getUserPosts,
   insertNewPost,
+  deletePostById,
+  updatePost
 };
