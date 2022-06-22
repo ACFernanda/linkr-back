@@ -6,7 +6,7 @@ import postsRouter from "./postsRouter.js";
 import usersRouter from "./usersRouter.js";
 import likesRouter from "./likesRouter.js";
 import authRouter from "./authRouter.js";
-import messageRouter from "./messageRouter.js";
+import commentRouter from "./commentRouter.js";
 
 
 const router = Router();
@@ -17,7 +17,7 @@ router.use(postsRouter);
 router.use(usersRouter);
 router.use(likesRouter);
 router.use(authRouter);
-router.use(messageRouter);
+router.use(commentRouter);
 
 
 export default router;

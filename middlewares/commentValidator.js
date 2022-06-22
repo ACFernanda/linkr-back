@@ -1,8 +1,8 @@
-import messageSchema from "../schemas/messageSchema.js";
+import commentSchema from "../schemas/commentSchema.js";
 
-export function messageValidator(req, res, next) {
+export function commentValidator(req, res, next) {
   const body = req.body;
-  const validation = messageSchema.validate(body);
+  const validation = commentSchema.validate(body);
   if (validation.error) {
     return res.status(422).send(validation.error.details.map((detail) => detail.message));
   }

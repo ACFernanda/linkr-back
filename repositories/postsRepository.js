@@ -3,11 +3,11 @@ import db from "./../config/db.js";
 async function getAllPosts() {
   return db.query(
     `
-    SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL", posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage", COUNT(likes.id) AS "countLikes",COUNT(messages.id) AS "countComments"
+    SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL", posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage", COUNT(likes.id) AS "countLikes",COUNT(comments.id) AS "countComments"
     FROM posts 
     JOIN users ON posts."userId" = users.id
     LEFT JOIN likes ON posts.id = likes."postId"
-    LEFT JOIN messages ON posts.id = messages."postId"
+    LEFT JOIN comments ON posts.id = comments."postId"
     GROUP BY posts.id, users.id
     ORDER BY posts."createdAt" DESC
     LIMIT 20;`
