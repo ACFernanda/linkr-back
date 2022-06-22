@@ -5,7 +5,7 @@ import { messageValidator } from "../middlewares/messageValidator.js";
 
 const messageRouter= Router();
 
-messageRouter.post('/messages/:postId',  tokenValidator, messageValidator, postMessage)
+messageRouter.post('/messages/:postId', messageValidator, tokenValidator, postMessage)
 messageRouter.get('/messages/:postId', tokenValidator,getMessages)
 
 export default messageRouter

@@ -13,6 +13,7 @@ if (process.env.MODE === "PROD") {
   };
 }
 
+
 console.log(configDatabase);
 const db = new Pool(configDatabase);
 export default db;
