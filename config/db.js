@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const { Pool } = pg;
-let configDatabase = {
+const configDatabase = {
   connectionString: process.env.DATABASE_URL,
 };
 
@@ -12,6 +12,8 @@ if (process.env.MODE === "PROD") {
     rejectUnauthorized: false,
   };
 }
+
+
 
 console.log(configDatabase);
 const db = new Pool(configDatabase);
