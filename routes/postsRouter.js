@@ -8,7 +8,7 @@ const postsRouter = Router();
 
 postsRouter.get("/posts", tokenValidator, getAllPosts);
 postsRouter.post("/posts", tokenValidator, newPostValidator, publishNewPost);
-postsRouter.put("/posts/:id", tokenValidator, ownerCheck, editPost)
+postsRouter.put("/posts/:id", tokenValidator, ownerCheck,editPostValidator, editPost)
 postsRouter.delete("/posts/:id", tokenValidator, ownerCheck, deletePost)
 
 export default postsRouter;

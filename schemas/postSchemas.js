@@ -5,4 +5,6 @@ export const newPostSchema = joi.object({
   description: joi.string().allow(""),
 });
 
-export const editPostSchema=joi.string().allow("");
+export const editPostSchema=joi.object({
+  description: joi.string().allow("")
+});

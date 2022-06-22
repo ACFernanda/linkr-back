@@ -10,9 +10,8 @@ export function newPostValidator(req, res, next) {
   next();
 }
 export function editPostValidator(req, res, next) {
-  const {description} = req.body;
-  console.log(description)
-  const validation = editPostSchema.validate(description);
+  const body = req.body;
+  const validation = editPostSchema.validate(body);
   if (validation.error) {
     return res.status(422).send(validation.error.details.map((detail) => detail.message));
   }
