@@ -3,10 +3,11 @@ import db from "./../config/db.js";
 async function getAllPosts() {
   return db.query(
     `
-    SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL", posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage", COUNT(likes.id) AS "countLikes"
+    SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL", posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage", COUNT(likes.id) AS "countLikes",COUNT(comments.id) AS "countComments"
     FROM posts 
     JOIN users ON posts."userId" = users.id
     LEFT JOIN likes ON posts.id = likes."postId"
+    LEFT JOIN comments ON posts.id = comments."postId"
     GROUP BY posts.id, users.id
     ORDER BY posts."createdAt" DESC
     LIMIT 20;`
@@ -53,11 +54,22 @@ async function updatePost(id,description) {
     [id,description]
   );
 }
+async function getIdPost(userId, url, description ) {
+  return db.query(
+    `
+    SELECT id FROM posts
+    WHERE "userId"=$1 AND url=$2 AND description=$3
+;`,
+[userId, url, description]
+  );
+}
+
 
 export const postsRepository = {
   getAllPosts,
   getUserPosts,
   insertNewPost,
   deletePostById,
-  updatePost
+  updatePost,
+  getIdPost
 };

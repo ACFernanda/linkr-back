@@ -27,8 +27,17 @@ async function getLikes(postId) {
   );
 }
 
+async function deleteAllLikesOfPost(postId) {
+  return db.query(
+    `
+    DELETE FROM likes WHERE "postId" = $1;`,
+    [postId]
+  );
+}
+
 export const likesRepository = {
   likePost,
   dislikePost,
   getLikes,
+  deleteAllLikesOfPost
 };

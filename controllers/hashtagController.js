@@ -1,23 +1,15 @@
 import db from "../config/db.js";
+import {hashtagsRepository} from '../repositories/hashtagsRepository.js'
+import {postsRepository} from '../repositories/postsRepository.js'
+
 export async function readHashtags(post) {
   const { userId, url, description } = post;
-  let id=post.id
   try {
-    
-    if(!id){
-      const result = await db.query(
-        `
-              SELECT id FROM posts
-              WHERE "userId"=$1 AND url=$2 AND description=$3
-          ;`,
-        [userId, url, description]
-      );
-      id=result.rows[0].id
-    }
+    const result = await postsRepository.getIdPost(userId, url, description )
     const wordList = description.split(" ");
     for (let k = 0; k < wordList.length; k++) {
       if (wordList[k][0] === "#") {
-        createHashtag(id, wordList[k].replace("#", ""));
+        createHashtag(result.rows[0].id, wordList[k].replace("#", ""));
       }
     }
   } catch (e) {
@@ -36,52 +28,20 @@ export async function deleteHashtags(postId){
 }
 export async function createHashtag(postId, word) {
   try {
-    let result = await db.query(
-      `
-            SELECT id 
-            FROM hashtags
-            WHERE name=$1
-        ;`,
-      [word]
-    );
+    let result = await hashtagsRepository.getHashtagId(word)
     if (result.rowCount === 0) {
-      await db.query(
-        `
-                INSERT INTO hashtags (name) 
-                VALUES ($1)
-            ;`,
-        [word]
-      );
-      result = await db.query(
-        `
-                SELECT id 
-                FROM hashtags
-                WHERE name=$1
-            ;`,
-        [word]
-      );
+      await hashtagsRepository.insertHashtag(word)
+      result = await hashtagsRepository.getHashtagId(word)
     }
-    await db.query(
-      `
-            INSERT INTO post_hashtag ("postId","hashtagId") 
-            VALUES ($1,$2)
-        ;`,
-      [postId, result.rows[0].id]
-    );
+    const hashtagId=result.rows[0].id
+    await hashtagsRepository.insertPost_Hashtag(postId,hashtagId)
   } catch (e) {
     console.log(e, "Erro ao criar hashtags");
   }
 }
 export async function getHashtagList(req, res) {
   try {
-    const result = await db.query(`
-            SELECT h.name as name
-            FROM post_hashtag p
-            JOIN hashtags h ON h.id=p."hashtagId"
-            GROUP BY name
-            ORDER BY COUNT(name) DESC
-            LIMIT 10
-        ;`);
+    const result = await hashtagsRepository.selectHashtagList()
     if (result.rowCount === 0) {
       return res.sendStatus(500);
     }
@@ -94,16 +54,7 @@ export async function getHashtagList(req, res) {
 export async function getPostsByHashtag(req, res) {
   const { word } = req.params;
   try {
-    const result = await db.query(
-      `
-      SELECT p.*, u."pictureURL", u.username
-      FROM hashtags h
-      JOIN post_hashtag ph ON ph."hashtagId"=h.id
-      JOIN posts p ON p.id=ph."postId"
-      JOIN users u ON u.id=p."userId"
-      WHERE h.name=$1;`,
-      [word]
-    );
+    const result = await hashtagsRepository.selectPostsByHashtag(word)
     res.send(result.rows);
   } catch (e) {
     console.log(e, "Erro ao buscar posts relacionados a hashtag");

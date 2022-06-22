@@ -28,6 +28,8 @@ if(process.env.MODE === "DEV"){
 }
  
 
+
+
 console.log(configDatabase);
 const db = new Pool(configDatabase);
 export default db;
