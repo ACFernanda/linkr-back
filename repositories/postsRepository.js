@@ -3,11 +3,12 @@ import db from "./../config/db.js";
 async function getAllPosts(userId) {
   return db.query(
     `
-    SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL", posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage", COUNT(likes.id) AS "countLikes"
+    SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL", posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage", COUNT(likes.id) AS "countLikes",COUNT(comments.id) AS "countComments"
     FROM posts 
     JOIN users ON posts."userId" = users.id
     LEFT JOIN follows ON follows."userId"=$1
     LEFT JOIN likes ON posts.id = likes."postId"
+    LEFT JOIN comments ON posts.id = comments."postId"
     WHERE follows.following = posts."userId" OR posts."userId"=$2
     GROUP BY posts.id, users.id
     ORDER BY posts."createdAt" DESC
