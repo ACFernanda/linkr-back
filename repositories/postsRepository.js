@@ -36,8 +36,20 @@ async function insertNewPost(post) {
   );
 }
 
+async function getIdPost(userId, url, description ) {
+  return db.query(
+    `
+    SELECT id FROM posts
+    WHERE "userId"=$1 AND url=$2 AND description=$3
+;`,
+[userId, url, description]
+  );
+}
+
+
 export const postsRepository = {
   getAllPosts,
   getUserPosts,
   insertNewPost,
+  getIdPost
 };

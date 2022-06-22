@@ -8,6 +8,7 @@ import likesRouter from "./likesRouter.js";
 import authRouter from "./authRouter.js";
 import commentRouter from "./commentRouter.js";
 
+import followsRouter from "./followsRouter.js";
 
 const router = Router();
 
@@ -19,5 +20,6 @@ router.use(likesRouter);
 router.use(authRouter);
 router.use(commentRouter);
 
+router.use(followsRouter);
 
 export default router;
