@@ -22,6 +22,7 @@ export async function readHashtags(post) {
 }
 
 export async function deleteHashtags(postId){
+  
   try{
     await hashtagsRepository.deletePost_Hashtag(postId)
   }catch(e){

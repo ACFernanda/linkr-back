@@ -74,8 +74,8 @@ export async function editPost(req, res) {
   try {
     const result = await postsRepository.updatePost(idInteger, description);
     if (result.rowCount != 1) { return res.sendStatus(404); }
-    deleteHashtags(idInteger);
-    readHashtags(post);
+    await deleteHashtags(idInteger);
+    await readHashtags(post);
     res.sendStatus(200);
   }
   catch (e) {
@@ -89,8 +89,8 @@ export async function deletePost(req, res) {
   const idInteger = parseInt(id);
   try {
     await likesRepository.deleteAllLikesOfPost(idInteger);
-    deleteHashtags(idInteger);
-    deleteComments(idInteger);
+    await deleteHashtags(idInteger);
+    await deleteComments(idInteger);
     const result = await postsRepository.deletePostById(idInteger);
     if (result.rowCount != 1) { return res.sendStatus(404); }
     res.sendStatus(200);
