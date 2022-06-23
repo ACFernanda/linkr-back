@@ -2,7 +2,7 @@ import db from "./../config/db.js";
 
 async function getAllPosts(userId) {
   return db.query(
-    `SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL", posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage", COUNT(likes.id) AS "countLikes", COUNT(comments.id) AS "countComments"
+    `SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL", posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage", COUNT(DISTINCT(likes.id)) AS "countLikes", COUNT(DISTINCT(comments.id)) AS "countComments"
     FROM posts 
     JOIN users ON posts."userId" = users.id
     LEFT JOIN follows ON follows."userId"=$1
@@ -20,7 +20,7 @@ async function getUserPosts(userId) {
   return db.query(
     `SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL",
     posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage",
-    COUNT(likes.id) AS "countLikes", COUNT(comments.id) AS "countComments"
+    COUNT(DISTINCT(likes.id)) AS "countLikes", COUNT(DISTINCT(comments.id)) AS "countComments"
     FROM posts 
     JOIN users ON posts."userId" = users.id
     LEFT JOIN likes ON likes."postId" = posts.id
