@@ -8,11 +8,11 @@ async function getAllPosts(userId) {
     LEFT JOIN follows ON follows."userId"=$1
     LEFT JOIN likes ON posts.id = likes."postId"
     LEFT JOIN comments ON posts.id = comments."postId"
-    WHERE follows.following = posts."userId" OR posts."userId"=$2
+    WHERE follows.following = posts."userId"
     GROUP BY posts.id, users.id
     ORDER BY posts."createdAt" DESC
     LIMIT 20;`,
-    [userId, userId]
+    [userId]
   );
 }
 
