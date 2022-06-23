@@ -5,13 +5,15 @@ import { postsRepository } from '../repositories/postsRepository.js';
 export async function readHashtags(post) {
   const { userId, url, description } = post;
   try {
-    const result = await postsRepository.getIdPost(userId, url, description);
+    let id=post.id
+    if(!id){
+      const result = await postsRepository.getIdPost(userId, url, description);
+      id=result.rows[0].id
+    }
     const wordList = description.split(" ");
-    console.log(description);
-    console.log(result.rows);
     for (let k = 0; k < wordList.length; k++) {
       if (wordList[k][0] === "#") {
-        createHashtag(result.rows[0].id, wordList[k].replace("#", ""));
+        createHashtag(id, wordList[k].replace("#", ""));
       }
     }
   } catch (e) {

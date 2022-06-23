@@ -68,8 +68,9 @@ export async function editPost(req, res) {
 
   const { description } = req.body;
   const { id } = req.params;
-  const post = { id, description };
+  
   const idInteger = parseInt(id);
+  const post = { id:idInteger, description };
   try {
     const result = await postsRepository.updatePost(idInteger, description);
     if (result.rowCount != 1) { return res.sendStatus(404); }
