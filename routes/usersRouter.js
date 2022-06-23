@@ -5,7 +5,7 @@ import { userValidator } from "../middlewares/userValidator.js";
 
 const usersRouter = Router();
 
-usersRouter.get("/users", tokenValidator, getUsers);
+usersRouter.post("/users", tokenValidator, getUsers);
 usersRouter.get("/users/:id", tokenValidator, userValidator, getUserPosts);
 
 export default usersRouter;
