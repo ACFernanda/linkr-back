@@ -22,7 +22,18 @@ async function selectComments(postId,myUserId) {
     return db.query(query, values);
 }
 
+async function deleteCommentsOfPost(postId) {
+    const query = `
+        DELETE FROM comments c
+        WHERE c."postId"=$1
+    ;`
+
+    const values = [postId];
+    return db.query(query, values);
+}
+
 export const commentRepository = {
     insertComment,
-    selectComments
+    selectComments,
+    deleteCommentsOfPost
 };

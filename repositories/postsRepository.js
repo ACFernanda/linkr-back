@@ -41,11 +41,28 @@ async function insertNewPost(post) {
   );
 }
 
-async function getIdPost(userId, url, description) {
+async function deletePostById(id) {
+  return db.query(`
+  DELETE FROM posts
+  WHERE id = $1;
+;`,
+    [id]
+  );
+}
+
+async function updatePost(id,description) {
+  return db.query(`
+    UPDATE posts
+    SET description=$2
+    WHERE id = $1;
+  ;`,
+    [id,description]
+  );
+}
+async function getIdPost(userId, url, description ) {
   return db.query(
     `SELECT id FROM posts
-    WHERE "userId"=$1 AND url=$2 AND description=$3
-;`,
+    WHERE "userId"=$1 AND url=$2 AND description=$3;`,
     [userId, url, description]
   );
 }
@@ -54,5 +71,7 @@ export const postsRepository = {
   getAllPosts,
   getUserPosts,
   insertNewPost,
-  getIdPost,
+  deletePostById,
+  updatePost,
+  getIdPost
 };

@@ -48,10 +48,17 @@ async function insertPost_Hashtag(postId, hashtagId) {
     return db.query(query, values);
 }
 
+async function deletePost_Hashtag(postId) {
+    const query = ` DELETE FROM post_hashtag WHERE "postId"=$1;`;
+    const values = [postId];
+    return db.query(query, values);
+}
+
 export const hashtagsRepository = {
     selectHashtagList,
     selectPostsByHashtag,
     getHashtagId,
     insertHashtag,
-    insertPost_Hashtag
+    insertPost_Hashtag,
+    deletePost_Hashtag
 };

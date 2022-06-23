@@ -5,17 +5,31 @@ import { postsRepository } from '../repositories/postsRepository.js';
 export async function readHashtags(post) {
   const { userId, url, description } = post;
   try {
-    const result = await postsRepository.getIdPost(userId, url, description);
+    let id=post.id
+    if(!id){
+      const result = await postsRepository.getIdPost(userId, url, description);
+      id=result.rows[0].id
+    }
     const wordList = description.split(" ");
     for (let k = 0; k < wordList.length; k++) {
       if (wordList[k][0] === "#") {
-        createHashtag(result.rows[0].id, wordList[k].replace("#", ""));
+        createHashtag(id, wordList[k].replace("#", ""));
       }
     }
   } catch (e) {
-    console.log(e, "Erro ao ler hashtags do post criado");
+    console.log(e, "Erro ao ler hashtags do post criado!");
   }
 }
+
+export async function deleteHashtags(postId){
+  
+  try{
+    await hashtagsRepository.deletePost_Hashtag(postId)
+  }catch(e){
+    console.log(e,"Erro ao excluir hashtags do post!")
+  }
+}
+
 export async function createHashtag(postId, word) {
   try {
     let result = await hashtagsRepository.getHashtagId(word);
@@ -29,6 +43,7 @@ export async function createHashtag(postId, word) {
     console.log(e, "Erro ao criar hashtags");
   }
 }
+
 export async function getHashtagList(req, res) {
   try {
     const result = await hashtagsRepository.selectHashtagList();
@@ -38,6 +53,7 @@ export async function getHashtagList(req, res) {
     res.sendStatus(500);
   }
 }
+
 export async function getPostsByHashtag(req, res) {
   const { word } = req.params;
   const { userId } = res.locals;
