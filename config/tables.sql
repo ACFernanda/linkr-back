@@ -55,3 +55,9 @@ CREATE TABLE "follows" (
 	"userId" INTEGER NOT NULL REFERENCES "users"("id"),
 	"following" INTEGER NOT NULL REFERENCES "users"("id")
 );
+
+CREATE TABLE "reposts" (
+	"id" SERIAL PRIMARY KEY NOT NULL,
+	"postId" INTEGER NOT NULL REFERENCES "posts"("id"),
+	"userRepostingId" INTEGER NOT NULL REFERENCES "users"("id")
+);

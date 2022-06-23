@@ -4,14 +4,15 @@ import { postsRepository } from "../repositories/postsRepository.js";
 import { usersRepository } from "../repositories/usersRepository.js";
 
 export async function getUsers(req, res) {
+  const { userId } = res.locals;
   const { name } = req.query;
   try {
     let users = null;
     if (!name) {
-      const result = await usersRepository.selectAllUsers();
+      const result = await usersRepository.selectAllUsers(userId);
       users = result.rows;
     } else {
-      const result = await usersRepository.selectUsersByName(name);
+      const result = await usersRepository.selectUsersByName(name, userId);
       users = result.rows;
     }
 
@@ -29,13 +30,15 @@ export async function getUserPosts(req, res) {
   try {
     const postResult = await postsRepository.getUserPosts(requestedUser.id);
     const posts = postResult.rows;
-    
+
     const completePosts = [];
     for (let post of posts) {
       const resultLikes = await likesRepository.getLikes(post.postId);
-      const likes = resultLikes.rows.map(like => like.username);
-      const likedByUser = resultLikes.rows.map(like => like.userId).includes(parseInt(userId));
-      completePosts.push({...post, likes, likedByUser});
+      const likes = resultLikes.rows.map((like) => like.username);
+      const likedByUser = resultLikes.rows
+        .map((like) => like.userId)
+        .includes(parseInt(userId));
+      completePosts.push({ ...post, likes, likedByUser });
     }
 
     const followResult = await followsRepository.getIfUserFollows(
