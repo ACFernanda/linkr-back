@@ -1,29 +1,33 @@
 import db from "../config/db.js";
 
 async function selectAllUsers(userId) {
+  const user = `{"${userId}"}`;
   const query = `
-        SELECT users.id, users.username AS name, users."pictureURL", follows."userId"
-        FROM users
-        LEFT JOIN follows ON follows."following"=users.id
-        ORDER BY CASE WHEN follows."userId"=$1 THEN 0 ELSE 1 END, follows."userId"
+        SELECT u.id, u.username AS name, u."pictureURL", array_agg(follows."userId") AS followers
+        FROM users u
+        LEFT JOIN follows ON follows."following"=u.id
+        GROUP BY u.id, u.username, u."pictureURL"
+        ORDER BY CASE WHEN array_agg(follows."userId") @> $1 THEN 0 ELSE 1 END, array_agg(follows."userId")
     `;
 
-  const values = [userId];
+  const values = [user];
 
   return db.query(query, values);
 }
 
 async function selectUsersByName(username, userId) {
   const formatedName = `${username}%`;
+  const user = `{"${userId}"}`;
   const query = `
-        SELECT users.id, users.username AS name, users."pictureURL", follows."userId"
-        FROM users
-        LEFT JOIN follows ON follows."following"=users.id
+        SELECT u.id, u.username AS name, u."pictureURL", array_agg(follows."userId") AS followers
+        FROM users u
+        LEFT JOIN follows ON follows."following"=u.id
         WHERE username ILIKE $1
-        ORDER  BY CASE WHEN follows."userId"=$2 THEN 0 ELSE 1 END, follows."userId";
+        GROUP BY u.id, u.username, u."pictureURL"
+        ORDER BY CASE WHEN array_agg(follows."userId") @> $2 THEN 0 ELSE 1 END, array_agg(follows."userId")
     `;
 
-  const values = [formatedName, userId];
+  const values = [formatedName, user];
 
   return db.query(query, values);
 }

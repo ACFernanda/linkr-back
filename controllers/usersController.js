@@ -4,7 +4,7 @@ import { postsRepository } from "../repositories/postsRepository.js";
 import { usersRepository } from "../repositories/usersRepository.js";
 
 export async function getUsers(req, res) {
-  const { userId } = req.body;
+  const { userId } = res.locals;
   const { name } = req.query;
   try {
     let users = null;
