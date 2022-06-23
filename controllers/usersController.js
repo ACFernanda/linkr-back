@@ -1,6 +1,7 @@
 import { followsRepository } from "../repositories/followsRepository.js";
 import { likesRepository } from "../repositories/likesRepository.js";
 import { postsRepository } from "../repositories/postsRepository.js";
+import { shareRepository } from "../repositories/shareRepository.js";
 import { usersRepository } from "../repositories/usersRepository.js";
 
 export async function getUsers(req, res) {
@@ -28,8 +29,18 @@ export async function getUserPosts(req, res) {
 
   try {
     const postResult = await postsRepository.getUserPosts(requestedUser.id);
+    const shareResult=await shareRepository.selectUserShares(requestedUser.id)
+    const postUsernameResult=await usersRepository.selectUserById(requestedUser.id)
     const posts = postResult.rows;
     
+    const shares=shareResult.rows?.map(obj=>(
+      {...obj,
+        reposterId:requestedUser.id,
+        reposterName:postUsernameResult.rows[0].username
+      }))
+      for(let post of shares){
+        posts.push(post)
+      }
     const completePosts = [];
     for (let post of posts) {
       const resultLikes = await likesRepository.getLikes(post.postId);

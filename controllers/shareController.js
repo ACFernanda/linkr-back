@@ -7,6 +7,7 @@ export  async function postShare(req, res) {
     const postId=parseInt(id)
   try {
     await shareRepository.insertShare(postId,userId)
+    console.log('inserido')
     res.sendStatus(200);
   } catch (e) {
     console.log(e, "Erro ao postar comentario!");
