@@ -1,6 +1,4 @@
-import db from "../config/db.js";
 import { commentRepository } from "../repositories/commentRepository.js";
-
 
 export async function postComment(req, res) {
     const { postId } = req.params;
@@ -24,4 +22,12 @@ export async function getComments(req, res) {
     console.log(e, "Erro ao buscar comentarios!");
     res.sendStatus(500);
   }
+}
+
+export async function deleteComments(postId) {
+try {
+   await commentRepository.deleteCommentsOfPost(postId)
+} catch (e) {
+  console.log(e, "Erro ao deletar comentarios!");
+}
 }

@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const { Pool } = pg;
-const configDatabase = {
+let configDatabase = {
   connectionString: process.env.DATABASE_URL,
 };
 

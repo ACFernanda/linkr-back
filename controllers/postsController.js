@@ -1,7 +1,8 @@
 import urlMetadata from "url-metadata";
+import { deleteHashtags, readHashtags } from "./hashtagController.js";
+import { deleteComments } from "./commentController.js";
 
 import { postsRepository } from "../repositories/postsRepository.js";
-import { readHashtags } from "./hashtagController.js";
 import { likesRepository } from "../repositories/likesRepository.js";
 
 export async function getAllPosts(req, res) {
@@ -61,4 +62,41 @@ export async function publishNewPost(req, res) {
       console.log(error);
     }
   );
+}
+
+export async function editPost(req, res) {
+
+  const { description } = req.body;
+  const { id } = req.params;
+  
+  const idInteger = parseInt(id);
+  const post = { id:idInteger, description };
+  try {
+    const result = await postsRepository.updatePost(idInteger, description);
+    if (result.rowCount != 1) { return res.sendStatus(404); }
+    await deleteHashtags(idInteger);
+    await readHashtags(post);
+    res.sendStatus(200);
+  }
+  catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+}
+
+export async function deletePost(req, res) {
+  const { id } = req.params;
+  const idInteger = parseInt(id);
+  try {
+    await likesRepository.deleteAllLikesOfPost(idInteger);
+    await deleteHashtags(idInteger);
+    await deleteComments(idInteger);
+    const result = await postsRepository.deletePostById(idInteger);
+    if (result.rowCount != 1) { return res.sendStatus(404); }
+    res.sendStatus(200);
+  }
+  catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
 }

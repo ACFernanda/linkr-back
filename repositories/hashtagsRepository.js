@@ -15,12 +15,13 @@ async function selectPostsByHashtag(word) {
     const query =
         `SELECT p.id AS "postId", u.id AS "userId", u.username, u."pictureURL",
         p.url, p.description, p."urlTitle", p."urlDescription", p."urlImage", 
-        COUNT(l.id) AS "countLikes"
+        COUNT(l.id) AS "countLikes",  COUNT(c.id) AS "countComments"
         FROM hashtags h
         JOIN post_hashtag ph ON ph."hashtagId"=h.id
         JOIN posts p ON p.id=ph."postId"
         JOIN users u ON u.id=p."userId"
         LEFT JOIN likes l ON p.id = l."postId"
+        LEFT JOIN comments c ON p.id = c."postId"
         WHERE h.name=$1
         GROUP BY p.id, u.id;`;
     const values = [word];
@@ -42,8 +43,14 @@ async function insertHashtag(word) {
 async function insertPost_Hashtag(postId, hashtagId) {
     const query =
         `INSERT INTO post_hashtag ("postId","hashtagId") 
-            FVALUES ($1,$2);`;
+         VALUES ($1,$2);`;
     const values = [postId, hashtagId];
+    return db.query(query, values);
+}
+
+async function deletePost_Hashtag(postId) {
+    const query = ` DELETE FROM post_hashtag WHERE "postId"=$1;`;
+    const values = [postId];
     return db.query(query, values);
 }
 
@@ -52,5 +59,6 @@ export const hashtagsRepository = {
     selectPostsByHashtag,
     getHashtagId,
     insertHashtag,
-    insertPost_Hashtag
+    insertPost_Hashtag,
+    deletePost_Hashtag
 };
