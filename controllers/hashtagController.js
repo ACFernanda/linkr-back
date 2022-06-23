@@ -13,19 +13,18 @@ export async function readHashtags(post) {
       }
     }
   } catch (e) {
-    console.log(e, "Erro ao ler hashtags do post criado");
+    console.log(e, "Erro ao ler hashtags do post criado!");
   }
 }
+
 export async function deleteHashtags(postId){
   try{
-    await db.query(`
-      DELETE FROM post_hashtag
-      WHERE "postId"=$1
-    ;`,[postId])
-  }catch{
-
+    await hashtagsRepository.deletePost_Hashtag(postId)
+  }catch(e){
+    console.log(e,"Erro ao excluir hashtags do post!")
   }
 }
+
 export async function createHashtag(postId, word) {
   try {
     let result = await hashtagsRepository.getHashtagId(word);
@@ -39,6 +38,7 @@ export async function createHashtag(postId, word) {
     console.log(e, "Erro ao criar hashtags");
   }
 }
+
 export async function getHashtagList(req, res) {
   try {
     const result = await hashtagsRepository.selectHashtagList();
@@ -48,6 +48,7 @@ export async function getHashtagList(req, res) {
     res.sendStatus(500);
   }
 }
+
 export async function getPostsByHashtag(req, res) {
   const { word } = req.params;
   const { userId } = res.locals;
