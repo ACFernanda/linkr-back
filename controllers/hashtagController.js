@@ -7,6 +7,8 @@ export async function readHashtags(post) {
   try {
     const result = await postsRepository.getIdPost(userId, url, description);
     const wordList = description.split(" ");
+    console.log(description);
+    console.log(result.rows);
     for (let k = 0; k < wordList.length; k++) {
       if (wordList[k][0] === "#") {
         createHashtag(result.rows[0].id, wordList[k].replace("#", ""));

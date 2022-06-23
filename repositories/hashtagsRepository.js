@@ -42,7 +42,7 @@ async function insertHashtag(word) {
 async function insertPost_Hashtag(postId, hashtagId) {
     const query =
         `INSERT INTO post_hashtag ("postId","hashtagId") 
-            FVALUES ($1,$2);`;
+         VALUES ($1,$2);`;
     const values = [postId, hashtagId];
     return db.query(query, values);
 }

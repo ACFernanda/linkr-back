@@ -61,8 +61,7 @@ async function updatePost(id,description) {
 async function getIdPost(userId, url, description ) {
   return db.query(
     `SELECT id FROM posts
-    WHERE "userId"=$1 AND url=$2 AND description=$3
-;`,
+    WHERE "userId"=$1 AND url=$2 AND description=$3;`,
     [userId, url, description]
   );
 }
