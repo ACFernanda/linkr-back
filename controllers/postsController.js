@@ -1,6 +1,6 @@
 import urlMetadata from "url-metadata";
-import {deleteHashtags, readHashtags } from "./hashtagController.js";
-import {deleteComments } from "./commentController.js";
+import { deleteHashtags, readHashtags } from "./hashtagController.js";
+import { deleteComments } from "./commentController.js";
 
 import { postsRepository } from "../repositories/postsRepository.js";
 import { likesRepository } from "../repositories/likesRepository.js";
@@ -64,38 +64,38 @@ export async function publishNewPost(req, res) {
   );
 }
 
-export async function editPost(req,res){
- 
-  const {description}=req.body
-  const {id}=req.params
-  const post={id,description}
-  const idInteger=parseInt(id)
-  try{
-    const result=await postsRepository.updatePost(idInteger,description)
-    if(result.rowCount!=1){return res.sendStatus(404)}
-    deleteHashtags(idInteger)
-    readHashtags(post)
-    res.sendStatus(200)
+export async function editPost(req, res) {
+
+  const { description } = req.body;
+  const { id } = req.params;
+  const post = { id, description };
+  const idInteger = parseInt(id);
+  try {
+    const result = await postsRepository.updatePost(idInteger, description);
+    if (result.rowCount != 1) { return res.sendStatus(404); }
+    deleteHashtags(idInteger);
+    readHashtags(post);
+    res.sendStatus(200);
   }
-  catch(e){
-    console.log(e)
-    res.sendStatus(500)
+  catch (e) {
+    console.log(e);
+    res.sendStatus(500);
   }
 }
 
-export async function deletePost(req,res){
-  const {id}=req.params
-  const idInteger=parseInt(id)
-  try{
-    await likesRepository.deleteAllLikesOfPost(idInteger)
-    deleteHashtags(idInteger)
-    deleteComments(idInteger)
-    const result=await postsRepository.deletePostById(idInteger)
-    if(result.rowCount!=1){return res.sendStatus(404)}
-    res.sendStatus(200)
+export async function deletePost(req, res) {
+  const { id } = req.params;
+  const idInteger = parseInt(id);
+  try {
+    await likesRepository.deleteAllLikesOfPost(idInteger);
+    deleteHashtags(idInteger);
+    deleteComments(idInteger);
+    const result = await postsRepository.deletePostById(idInteger);
+    if (result.rowCount != 1) { return res.sendStatus(404); }
+    res.sendStatus(200);
   }
-  catch(e){
-    console.log(e)
-    res.sendStatus(500)
+  catch (e) {
+    console.log(e);
+    res.sendStatus(500);
   }
 }
