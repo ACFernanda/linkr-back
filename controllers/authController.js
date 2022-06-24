@@ -13,8 +13,8 @@ export async function signUp(_req, res) {
     email,
     passwordHash,
     username,
-    imageURL
-  }
+    imageURL,
+  };
 
   try {
     await usersRepository.insertNewUser(newUser);
@@ -37,12 +37,26 @@ export async function signIn(req, res) {
       res.status(200).send({ token, user });
     } else {
       return res.status(401).send({
-        message: 'User or password is invalid',
+        message: "User or password is invalid",
         detail: `Ensure to provide the correct password`,
       });
     }
   } catch (e) {
     console.log(e);
     res.status(500).send("Ocorreu um erro ao fazer o login!");
+  }
+}
+
+export async function desactivateToken(req, res) {
+  const { authorization } = req.headers;
+
+  const userToken = authorization?.replace("Bearer ", "").trim();
+
+  try {
+    sessionsRepository.updateSessionStatus(userToken);
+    res.sendStatus(200);
+  } catch (e) {
+    console.log(e);
+    res.status(500).send("Ocorreu um erro ao fazer o logout!");
   }
 }
