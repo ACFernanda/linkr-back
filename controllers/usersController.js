@@ -26,9 +26,11 @@ export async function getUsers(req, res) {
 export async function getUserPosts(req, res) {
   const { requestedUser } = res.locals;
   const { userId } = res.locals;
+  let offset = req.query.offset;
+  offset = offset || 0;
 
   try {
-    const postResult = await postsRepository.getUserPosts(requestedUser.id);
+    const postResult = await postsRepository.getUserPosts(requestedUser.id, offset);
     const posts = postResult.rows;
 
     const completePosts = [];

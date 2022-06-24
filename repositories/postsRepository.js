@@ -16,7 +16,7 @@ async function getAllPosts(userId) {
   );
 }
 
-async function getUserPosts(userId) {
+async function getUserPosts(userId, offset) {
   return db.query(
     `SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL",
     posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage",
@@ -27,8 +27,10 @@ async function getUserPosts(userId) {
     LEFT JOIN comments ON posts.id = comments."postId"
     WHERE posts."userId" = $1
     GROUP BY posts.id, users.id
-    ORDER BY posts."createdAt" DESC;`,
-    [userId]
+    ORDER BY posts."createdAt" DESC
+    LIMIT 10
+    OFFSET $2; `,
+    [userId, offset*10]
   );
 }
 
