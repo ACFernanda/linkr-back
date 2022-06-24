@@ -19,7 +19,7 @@ async function getAllPosts(userId) {
 
 async function getUserPosts(userId) {
   return db.query(
-    `SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL", 
+    `SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL", posts."createdAt",
     posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage",
     COUNT(DISTINCT(likes.id)) AS "countLikes", COUNT(DISTINCT(comments.id)) AS "countComments", COUNT(DISTINCT(shares.id)) AS "countShares"
     FROM posts 

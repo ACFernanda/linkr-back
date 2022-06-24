@@ -11,7 +11,7 @@ async function insertShare(postId,userId) {
 
 async function selectUserShares(userId) {
     const query = `
-SELECT  posts.id AS "postId" , users.id AS "userId", users.username, users."pictureURL",
+SELECT  shares."createdAt", posts.id AS "postId" , users.id AS "userId", users.username, users."pictureURL",
     posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage",
     COUNT(likes.id) AS "countLikes"
     FROM shares 
@@ -19,7 +19,7 @@ SELECT  posts.id AS "postId" , users.id AS "userId", users.username, users."pict
     JOIN users ON posts."userId" = users.id
     LEFT JOIN likes ON likes."postId" = posts.id
     WHERE shares."userId" = $1
-    GROUP BY posts.id, users.id
+    GROUP BY posts.id, users.id ,shares."createdAt"
     ORDER BY posts."createdAt" DESC;
     `;
     const values = [userId];
