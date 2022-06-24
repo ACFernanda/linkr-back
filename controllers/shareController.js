@@ -10,7 +10,7 @@ export  async function postShare(req, res) {
     console.log('inserido')
     res.sendStatus(200);
   } catch (e) {
-    console.log(e, "Erro ao postar comentario!");
+    console.log(e, "Erro ao postar re-post!");
     res.sendStatus(500);
   }
 }

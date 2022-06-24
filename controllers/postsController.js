@@ -8,7 +8,11 @@ import { usersRepository } from "../repositories/usersRepository.js";
 
 export async function getAllPosts(req, res) {
   const { userId } = res.locals;
-  const limit=20
+
+  const {offset} = req.query
+  const getMore = offset || 0 ;
+
+  const limit = 20 + getMore
   try {
     const resultPosts = await postsRepository.getAllPosts(userId);
     const resultShares=await shareRepository.selectAllShares(userId)

@@ -29,7 +29,7 @@ async function getUserPosts(userId) {
     LEFT JOIN shares ON posts.id = shares."postId"
     WHERE posts."userId" = $1
     GROUP BY posts.id, users.id
-    ORDER BY posts."createdAt" DESC;`,
+    ORDER BY posts."createdAt" DESC; `,
     [userId]
   );
 }
@@ -37,8 +37,8 @@ async function getUserPosts(userId) {
 async function insertNewPost(post) {
   const { userId, url, description, urlTitle, urlDescription, urlImage } = post;
   return db.query(
-    `INSERT INTO posts ("userId", url, description, "urlTitle", "urlDescription", "urlImage")
-    VALUES ($1, $2, $3, $4, $5, $6);`,
+    `INSERT INTO posts("userId", url, description, "urlTitle", "urlDescription", "urlImage")
+  VALUES($1, $2, $3, $4, $5, $6); `,
     [userId, url, description, urlTitle, urlDescription, urlImage]
   );
 }
@@ -47,7 +47,7 @@ async function deletePostById(id) {
   return db.query(`
   DELETE FROM posts
   WHERE id = $1;
-;`,
+  ; `,
     [id]
   );
 }
@@ -55,16 +55,16 @@ async function deletePostById(id) {
 async function updatePost(id,description) {
   return db.query(`
     UPDATE posts
-    SET description=$2
+    SET description = $2
     WHERE id = $1;
-  ;`,
+  ; `,
     [id,description]
   );
 }
 async function getIdPost(userId, url, description ) {
   return db.query(
     `SELECT id FROM posts
-    WHERE "userId"=$1 AND url=$2 AND description=$3;`,
+    WHERE "userId" = $1 AND url = $2 AND description = $3; `,
     [userId, url, description]
   );
 }
