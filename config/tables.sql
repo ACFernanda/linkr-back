@@ -63,8 +63,3 @@ CREATE TABLE "follows" (
 	"following" INTEGER NOT NULL REFERENCES "users"("id")
 );
 
-CREATE TABLE "shares" (
-	"id" SERIAL PRIMARY KEY NOT NULL,
-	"postId" INTEGER NOT NULL REFERENCES "posts"("id"),
-	"userRepostingId" INTEGER NOT NULL REFERENCES "users"("id")
-);

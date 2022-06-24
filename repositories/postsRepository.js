@@ -11,13 +11,13 @@ async function getAllPosts(userId) {
     LEFT JOIN shares ON posts.id = shares."postId" 
     WHERE follows.following = posts."userId"
     GROUP BY posts.id, users.id
-    ORDER BY posts."createdAt" DESC
+    ORDER BY posts."createdAt" DESC;
     `,
     [userId]
   );
 }
 
-async function getUserPosts(userId, offset) {
+async function getUserPosts(userId) {
   return db.query(
     `SELECT posts.id AS "postId", users.id AS "userId", users.username, users."pictureURL", posts."createdAt",
     posts.url, posts.description, posts."urlTitle", posts."urlDescription", posts."urlImage",
@@ -29,10 +29,8 @@ async function getUserPosts(userId, offset) {
     LEFT JOIN shares ON posts.id = shares."postId"
     WHERE posts."userId" = $1
     GROUP BY posts.id, users.id
-    ORDER BY posts."createdAt" DESC
-    LIMIT 10
-    OFFSET $2; `,
-    [userId, offset*10]
+    ORDER BY posts."createdAt" DESC; `,
+    [userId]
   );
 }
 

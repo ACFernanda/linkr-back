@@ -11,7 +11,7 @@ async function selectHashtagList() {
     return db.query(query);
 }
 
-async function selectPostsByHashtag(word, offset) {
+async function selectPostsByHashtag(word) {
     const query =
         `SELECT p.id AS "postId", u.id AS "userId", u.username, u."pictureURL",
         p.url, p.description, p."urlTitle", p."urlDescription", p."urlImage", 
@@ -23,10 +23,8 @@ async function selectPostsByHashtag(word, offset) {
         LEFT JOIN likes l ON p.id = l."postId"
         LEFT JOIN comments c ON p.id = c."postId"
         WHERE h.name=$1
-        GROUP BY p.id, u.id
-        LIMIT 10
-        OFFSET $2;`;
-    const values = [word, offset*10];
+        GROUP BY p.id, u.id;`;
+    const values = [word];
     return db.query(query, values);
 }
 

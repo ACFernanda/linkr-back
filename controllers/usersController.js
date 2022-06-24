@@ -27,19 +27,17 @@ export async function getUsers(req, res) {
 export async function getUserPosts(req, res) {
   const { requestedUser } = res.locals;
   const { userId } = res.locals;
-  let offset = req.query.offset;
-  offset = offset || 0;
 
-  const {offset} = req.query
+  const {offset} = req.query;
   const getMore = offset || 0 ;
 
-  const limit = 20 + getMore
+  const limit = 20 + getMore;
 
   try {
 
-    const postResult = await postsRepository.getUserPosts(requestedUser.id)
-    const shareResult=await shareRepository.selectUserShares(requestedUser.id)
-    const postUsernameResult=await usersRepository.selectUserById(requestedUser.id)
+    const postResult = await postsRepository.getUserPosts(requestedUser.id);
+    const shareResult=await shareRepository.selectUserShares(requestedUser.id);
+    const postUsernameResult=await usersRepository.selectUserById(requestedUser.id);
     const posts = postResult.rows;
     
     const shares=shareResult.rows?.map(obj=>(
