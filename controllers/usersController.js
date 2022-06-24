@@ -55,6 +55,7 @@ export async function getUserPosts(req, res) {
     return res.send({
       posts: completePosts,
       name: requestedUser.username,
+      userPhoto: requestedUser.pictureURL,
       follow,
     });
   } catch (e) {
