@@ -10,12 +10,7 @@ export async function tokenValidator(req, res, next) {
   }
   try {
     const session = await sessionsRepository.selectSessionByToken(userToken);
-<<<<<<< HEAD
-    if (!session.rows.length) {
-      console.log(session.rows)
-=======
     if (!session.rows.length || session.rows[0].active === "false") {
->>>>>>> main
       return res.sendStatus(401);
     }
     
