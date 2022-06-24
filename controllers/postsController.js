@@ -1,28 +1,65 @@
 import urlMetadata from "url-metadata";
 import { deleteHashtags, readHashtags } from "./hashtagController.js";
 import { deleteComments } from "./commentController.js";
-
+import { shareRepository } from "../repositories/shareRepository.js";
 import { postsRepository } from "../repositories/postsRepository.js";
 import { likesRepository } from "../repositories/likesRepository.js";
+import { usersRepository } from "../repositories/usersRepository.js";
 
 export async function getAllPosts(req, res) {
   const { userId } = res.locals;
-  let offset = req.query.offset;
-  offset = offset || 0;
 
+  const {offset} = req.query
+  const getMore = offset || 0 ;
+
+  const limit = 20 + getMore
   try {
-    const resultPosts = await postsRepository.getAllPosts(userId, offset);
+    const resultPosts = await postsRepository.getAllPosts(userId);
+    const resultShares=await shareRepository.selectAllShares(userId)
+    
+    const usernames=[]
+    for(let share of resultShares.rows){
+      const resultName=await usersRepository.selectUserById(share.reposterId)
+      const username=resultName.rows[0].username
+      usernames.push(username)
+    }
+
+    const shares=resultShares.rows?.map((obj,index)=>(
+        {...obj,
+          reposterName:usernames[index]
+        }
+      ))
+      
     const posts = resultPosts.rows;
+    for(let share of shares){
+      posts.push(share)
+    }
+
+    const postsInOrder=[];
+    const aside=[]
+    let c;let x=0;let a
+    for(let k=0;k<posts.length;k++){
+      x=0
+      while(aside.includes(x)){x++}
+      c=posts[x].createdAt
+      a=x
+      for(let p=0;p<posts.length;p++){
+        if(aside.includes(p))continue
+        if( posts[p].createdAt > c ){c=posts[p].createdAt;a=p}
+      }
+      postsInOrder.push(posts[a])
+      aside.push(a)
+    }
 
     const completePosts = [];
-    for (let post of posts) {
+    for (let post of postsInOrder) {
       const resultLikes = await likesRepository.getLikes(post.postId);
       const likes = resultLikes.rows.map(like => like.username);
       const likedByUser = resultLikes.rows.map(like => like.userId).includes(parseInt(userId));
       completePosts.push({ ...post, likes, likedByUser });
     }
 
-    res.status(200).send(completePosts);
+    res.status(200).send(completePosts.slice(0,limit));
   } catch (e) {
     console.log(e);
     res.status(500).send("Ocorreu um erro ao buscar posts!");

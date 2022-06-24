@@ -5,15 +5,15 @@ export async function tokenValidator(req, res, next) {
 
   const userToken = authorization?.replace("Bearer ", "").trim();
   if (!userToken) {
+    console.log(userToken)
     return res.sendStatus(401);
   }
-
   try {
     const session = await sessionsRepository.selectSessionByToken(userToken);
     if (!session.rows.length || session.rows[0].active === "false") {
       return res.sendStatus(401);
     }
-
+    
     res.locals.userId = session.rows[0].userId;
     next();
   } catch (e) {
