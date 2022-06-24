@@ -1,15 +1,34 @@
 import urlMetadata from "url-metadata";
 import { deleteHashtags, readHashtags } from "./hashtagController.js";
 import { deleteComments } from "./commentController.js";
-
+import { shareRepository } from "../repositories/shareRepository.js";
 import { postsRepository } from "../repositories/postsRepository.js";
 import { likesRepository } from "../repositories/likesRepository.js";
+import { usersRepository } from "../repositories/usersRepository.js";
 
 export async function getAllPosts(req, res) {
   const { userId } = res.locals;
   try {
     const resultPosts = await postsRepository.getAllPosts(userId);
+    const resultShares=await shareRepository.selectAllShares(userId)
+    
+    const usernames=[]
+    for(let share of resultShares.rows){
+      const resultName=await usersRepository.selectUserById(share.reposterId)
+      const username=resultName.rows[0].username
+      usernames.push(username)
+    }
+
+    const shares=resultShares.rows?.map((obj,index)=>(
+        {...obj,
+          reposterName:usernames[index]
+        }
+      ))
+      
     const posts = resultPosts.rows;
+    for(let share of shares){
+      posts.push(share)
+    }
 
     const completePosts = [];
     for (let post of posts) {
