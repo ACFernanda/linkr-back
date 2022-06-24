@@ -7,8 +7,11 @@ import { likesRepository } from "../repositories/likesRepository.js";
 
 export async function getAllPosts(req, res) {
   const { userId } = res.locals;
+  let offset = req.query.offset;
+  offset = offset || 0;
+
   try {
-    const resultPosts = await postsRepository.getAllPosts(userId);
+    const resultPosts = await postsRepository.getAllPosts(userId, offset);
     const posts = resultPosts.rows;
 
     const completePosts = [];
