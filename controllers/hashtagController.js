@@ -57,8 +57,10 @@ export async function getHashtagList(req, res) {
 export async function getPostsByHashtag(req, res) {
   const { word } = req.params;
   const { userId } = res.locals;
+  let offset = req.query.offset;
+  offset = offset || 0;
   try {
-    const result = await hashtagsRepository.selectPostsByHashtag(word);
+    const result = await hashtagsRepository.selectPostsByHashtag(word, offset);
     const posts = result.rows;
 
     const completePosts = [];
