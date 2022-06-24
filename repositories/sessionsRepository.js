@@ -19,7 +19,7 @@ async function insertNewSession(userId, token) {
 
 async function updateSessionStatus(token) {
   const query = `
-        UPDATE sessions SET active='false' WHERE id = $1;
+        UPDATE sessions SET active='false' WHERE token = $1;
     `;
   const values = [token];
   return db.query(query, values);

@@ -51,12 +51,9 @@ export async function desactivateToken(req, res) {
   const { authorization } = req.headers;
 
   const userToken = authorization?.replace("Bearer ", "").trim();
-  if (!userToken) {
-    return res.sendStatus(401);
-  }
 
   try {
-    const result = await sessionsRepository.updateSessionStatus(userToken);
+    sessionsRepository.updateSessionStatus(userToken);
     res.sendStatus(200);
   } catch (e) {
     console.log(e);

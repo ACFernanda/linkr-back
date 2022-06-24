@@ -17,6 +17,6 @@ const authRouter = Router();
 
 authRouter.post("/sign-in", validateSignIn, findUser, signIn);
 authRouter.post("/sign-up", validateSignUp, userIsUnique, signUp);
-authRouter.put("/sessions", tokenValidator, desactivateToken);
+authRouter.patch("/sessions", tokenValidator, desactivateToken);
 
 export default authRouter;
