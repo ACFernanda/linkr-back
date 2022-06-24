@@ -30,7 +30,6 @@ export async function getAllPosts(req, res) {
       posts.push(share)
     }
 
-
     const postsInOrder=[];
     const aside=[]
     let c;let x=0;let a
@@ -47,7 +46,6 @@ export async function getAllPosts(req, res) {
       aside.push(a)
     }
 
-    console.log(postsInOrder)
     const completePosts = [];
     for (let post of postsInOrder) {
       const resultLikes = await likesRepository.getLikes(post.postId);
