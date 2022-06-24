@@ -30,8 +30,26 @@ export async function getAllPosts(req, res) {
       posts.push(share)
     }
 
+
+    const postsInOrder=[];
+    const aside=[]
+    let c;let x=0;let a
+    for(let k=0;k<posts.length;k++){
+      x=0
+      while(aside.includes(x)){x++}
+      c=posts[x].createdAt
+      a=x
+      for(let p=0;p<posts.length;p++){
+        if(aside.includes(p))continue
+        if( posts[p].createdAt > c ){c=posts[p].createdAt;a=p}
+      }
+      postsInOrder.push(posts[a])
+      aside.push(a)
+    }
+
+    console.log(postsInOrder)
     const completePosts = [];
-    for (let post of posts) {
+    for (let post of postsInOrder) {
       const resultLikes = await likesRepository.getLikes(post.postId);
       const likes = resultLikes.rows.map(like => like.username);
       const likedByUser = resultLikes.rows.map(like => like.userId).includes(parseInt(userId));
