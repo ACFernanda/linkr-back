@@ -8,6 +8,7 @@ import { usersRepository } from "../repositories/usersRepository.js";
 
 export async function getAllPosts(req, res) {
   const { userId } = res.locals;
+  const limit=20
   try {
     const resultPosts = await postsRepository.getAllPosts(userId);
     const resultShares=await shareRepository.selectAllShares(userId)
@@ -54,7 +55,7 @@ export async function getAllPosts(req, res) {
       completePosts.push({ ...post, likes, likedByUser });
     }
 
-    res.status(200).send(completePosts);
+    res.status(200).send(completePosts.slice(0,limit));
   } catch (e) {
     console.log(e);
     res.status(500).send("Ocorreu um erro ao buscar posts!");

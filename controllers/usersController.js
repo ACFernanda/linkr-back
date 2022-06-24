@@ -27,6 +27,7 @@ export async function getUsers(req, res) {
 export async function getUserPosts(req, res) {
   const { requestedUser } = res.locals;
   const { userId } = res.locals;
+  const limit=20
 
   try {
     const postResult = await postsRepository.getUserPosts(requestedUser.id);
@@ -81,7 +82,7 @@ export async function getUserPosts(req, res) {
     }
 
     return res.send({
-      posts: completePosts,
+      posts: completePosts.slice(0,limit),
       name: requestedUser.username,
       userPhoto: requestedUser.pictureURL,
       follow,

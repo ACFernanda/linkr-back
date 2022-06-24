@@ -12,7 +12,7 @@ async function getAllPosts(userId) {
     WHERE follows.following = posts."userId"
     GROUP BY posts.id, users.id
     ORDER BY posts."createdAt" DESC
-    LIMIT 20;`,
+    `,
     [userId]
   );
 }

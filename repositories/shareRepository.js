@@ -38,7 +38,7 @@ async function selectAllShares(userId) {
     WHERE follows.following = posts."userId" OR follows.following = shares."userId" 
     GROUP BY posts.id, users.id, shares."userId", shares."createdAt"
     ORDER BY posts."createdAt" DESC
-    LIMIT 20;`
+    `
     const values = [userId];
     return db.query(query, values);
 }
