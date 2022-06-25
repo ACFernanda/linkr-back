@@ -15,13 +15,14 @@ async function selectPostsByHashtag(word) {
     const query =
         `SELECT p.id AS "postId", u.id AS "userId", u.username, u."pictureURL",
         p.url, p.description, p."urlTitle", p."urlDescription", p."urlImage", 
-        COUNT(DISTINCT(l.id)) AS "countLikes",  COUNT(DISTINCT(c.id)) AS "countComments"
+        COUNT(DISTINCT(l.id)) AS "countLikes",  COUNT(DISTINCT(c.id)) AS "countComments", COUNT(DISTINCT(s.id)) AS "countShares"
         FROM hashtags h
         JOIN post_hashtag ph ON ph."hashtagId"=h.id
         JOIN posts p ON p.id=ph."postId"
         JOIN users u ON u.id=p."userId"
         LEFT JOIN likes l ON p.id = l."postId"
         LEFT JOIN comments c ON p.id = c."postId"
+        LEFT JOIN shares s ON p.id = s."postId"
         WHERE h.name=$1
         GROUP BY p.id, u.id;`;
     const values = [word];
